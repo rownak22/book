@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বইয়ের বিস্তারিত - বইঘর</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .book-details-container {
+            display: flex;
+            padding: 3rem 5%;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .book-detail-img {
+            flex: 1;
+            max-width: 400px;
+        }
+        
+        .book-detail-img img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .book-detail-info {
+            flex: 2;
+        }
+        
+        .book-detail-title {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .book-detail-author {
+            font-size: 1.5rem;
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+        }
+        
+        .book-detail-price {
+            font-size: 2rem;
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 1.5rem 0;
+        }
+        
+        .book-detail-desc {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn-buy {
+            background: #e74c3c;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .btn-cart {
+            background: #3498db;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #3498db;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h1><i class="fas fa-book"></i> বইঘর</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> হোম</a>
+            <a href="cart.html"><i class="fas fa-shopping-cart"></i> কার্ট <span id="cart-count">0</span></a>
+        </div>
+    </nav>
+
+    <div class="book-details-container">
+        <div class="book-detail-img">
+            <img id="detail-book-image" src="" alt="Book Image">
+        </div>
+        
+        <div class="book-detail-info">
+            <h1 id="detail-book-title" class="book-detail-title"></h1>
+            <h3 id="detail-book-author" class="book-detail-author"></h3>
+            <p id="detail-book-price" class="book-detail-price"></p>
+            <p id="detail-book-desc" class="book-detail-desc"></p>
+            
+            <div class="action-buttons">
+                <button class="btn-buy" onclick="buyNow()">
+                    <i class="fas fa-bolt"></i> এখনই কিনুন
+                </button>
+                <button class="btn-cart" onclick="addToCartFromDetails()">
+                    <i class="fas fa-cart-plus"></i> কার্টে যুক্ত করুন
+                </button>
+            </div>
+            
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> আরও বই দেখুন
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // বইয়ের ডিটেইল লোড করবে
+        function loadBookDetails() {
+            const book = JSON.parse(localStorage.getItem('selectedBook'));
+            
+            if (book) {
+                document.getElementById('detail-book-title').textContent = book.title;
+                document.getElementById('detail-book-author').textContent = `লেখক: ${book.author}`;
+                document.getElementById('detail-book-price').textContent = `৳ ${book.price}`;
+                document.getElementById('detail-book-desc').textContent = book.description;
+                document.getElementById('detail-book-image').src = book.image;
+            } else {
+                // যদি বই না পাওয়া যায়
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // এখনই কিনুন
+        function buyNow() {
+            const book = JSON.parse(localStorage.getItem('selectedBook'));
+            if (book) {
+                // সরাসরি কার্টে যুক্ত করে চেকআউটে নিয়ে যাবে
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cart.push(book);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                window.location.href = 'checkout.html';
+            }
+        }
+        
+        // কার্টে যুক্ত করবে
+        function addToCartFromDetails() {
+            const book = JSON.parse(localStorage.getItem('selectedBook'));
+            if (book) {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cart.push(book);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                alert('বইটি কার্টে যুক্ত হয়েছে!');
+                updateCartCount();
+            }
+        }
+        
+        // কার্ট কাউন্ট আপডেট
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartCount = document.getElementById('cart-count');
+            cartCount.textContent = cart.length;
+        }
+        
+        // পেজ লোড হওয়ার পর
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBookDetails();
+            updateCartCount();
+        });
+    </script>
+</body>
+</html>
