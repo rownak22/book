@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পেমেন্ট - বইঘর</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .payment-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .payment-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .payment-title {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+        }
+        
+        .payment-method {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border: 2px dashed #1abc9c;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        
+        .payment-info {
+            text-align: left;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .payment-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 1rem 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .btn-verify {
+            background: #1abc9c;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        
+        .note {
+            background: #fff3cd;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 2rem;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h1><i class="fas fa-book"></i> বইঘর</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> হোম</a>
+            <a href="admin/login.html" class="admin-btn"><i class="fas fa-user-cog"></i> অ্যাডমিন</a>
+        </div>
+    </nav>
+
+    <div class="payment-container">
+        <div class="payment-box">
+            <h1 class="payment-title"><i class="fas fa-credit-card"></i> পেমেন্ট করুন</h1>
+            
+            <div class="payment-method">
+                <h3 id="selected-method">বিকাশ পেমেন্ট</h3>
+                <p>ম্যানুয়াল ভেরিফিকেশন সিস্টেম</p>
+            </div>
+            
+            <div class="payment-info">
+                <div class="payment-step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <strong>বিকাশে পেমেন্ট করুন</strong>
+                        <p>বিকাশ অ্যাপে গিয়ে "Send Money" অপশন সিলেক্ট করুন</p>
+                    </div>
+                </div>
+                
+                <div class="payment-step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <strong>নিচের নম্বরে টাকা পাঠান</strong>
+                        <p style="font-size: 1.5rem; color: #e74c3c; font-weight: bold;">
+                            <i class="fas fa-phone"></i> ০১৭১২-৩৪৫৬৭৮
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="payment-step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <strong>ট্র্যানজেকশন আইডি দিন</strong>
+                        <p>টাকা পাঠানোর পর যে ট্র্যানজেকশন আইডি পাবেন, সেটি নিচে দিন</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <label for="trxid">ট্র্যানজেকশন আইডি (TRXID)</label>
+                <input type="text" id="trxid" class="form-control" 
+                       placeholder="যেমন: 8A7K9B0C1D2E3F4G" required>
+                
+                <label for="sender-number">আপনার মোবাইল নম্বর</label>
+                <input type="text" id="sender-number" class="form-control" 
+                       placeholder="যেমন: ০১৭১১২২৩৩৪৪" required>
+                
+                <label for="amount">টাকার পরিমাণ</label>
+                <input type="number" id="amount" class="form-control" 
+                       placeholder="টাকার পরিমাণ দিন" required>
+                
+                <button class="btn-verify" onclick="submitPayment()">
+                    <i class="fas fa-check-circle"></i> পেমেন্ট সাবমিট করুন
+                </button>
+            </div>
+            
+            <div class="note">
+                <p><i class="fas fa-info-circle"></i> <strong>দ্রষ্টব্য:</strong> পেমেন্ট সাবমিট করার পর আমাদের অ্যাডমিন ম্যানুয়ালি ভেরিফাই করবেন। ভেরিফিকেশন সম্পন্ন হলে আপনাকে এসএমএস ও ইমেইল নোটিফিকেশন পাঠানো হবে।</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // পেমেন্ট মেথড সেট করবে
+        function loadPaymentMethod() {
+            const order = JSON.parse(localStorage.getItem('currentOrder'));
+            if (order && order.paymentMethod) {
+                const methodElement = document.getElementById('selected-method');
+                const method = order.paymentMethod;
+                
+                if (method === 'bkash') {
+                    methodElement.innerHTML = '<i class="fas fa-mobile-alt"></i> বিকাশ পেমেন্ট';
+                } else if (method === 'nogod') {
+                    methodElement.innerHTML = '<i class="fas fa-wallet"></i> নগদ পেমেন্ট';
+                    document.querySelector('.payment-step:nth-child(2) p').innerHTML = 
+                        '<i class="fas fa-phone"></i> ০১৭১২-৩৪৫৬৭৯';
+                } else if (method === 'rocket') {
+                    methodElement.innerHTML = '<i class="fas fa-rocket"></i> রকেট পেমেন্ট';
+                    document.querySelector('.payment-step:nth-child(2) p').innerHTML = 
+                        '<i class="fas fa-phone"></i> ০১৭১২-৩৪৫৬৮০';
+                }
+            }
+            
+            // মোট টাকা সেট করবে
+            const cart = order ? order.cart : [];
+            let total = 0;
+            cart.forEach(item => total += item.price);
+            document.getElementById('amount').value = total;
+        }
+        
+        // পেমেন্ট সাবমিট
+        function submitPayment() {
+            const trxid = document.getElementById('trxid').value.trim();
+            const senderNumber = document.getElementById('sender-number').value.trim();
+            const amount = document.getElementById('amount').value;
+            
+            if (!trxid || !senderNumber || !amount) {
+                alert('দয়া করে সব তথ্য পূরণ করুন');
+                return;
+            }
+            
+            // অর্ডার ডাটা নিয়ে নিবে
+            const order = JSON.parse(localStorage.getItem('currentOrder')) || {};
+            const paymentData = {
+                ...order,
+                payment: {
+                    trxid,
+                    senderNumber,
+                    amount,
+                    status: 'pending',
+                    timestamp: new Date().toLocaleString()
+                }
+            };
+            
+            // সব পেমেন্ট ডাটা LocalStorage এ সেভ করবে
+            savePaymentData(paymentData);
+            
+            // সাফল্য পেজে রিডাইরেক্ট
+            window.location.href = 'success.html';
+        }
+        
+        // পেমেন্ট ডাটা সেভ করবে
+        function savePaymentData(paymentData) {
+            // existing payments লোড করবে
+            let allPayments = JSON.parse(localStorage.getItem('allPayments')) || [];
+            
+            // নতুন পেমেন্ট যুক্ত করবে
+            allPayments.push(paymentData);
+            
+            // LocalStorage এ সেভ করবে
+            localStorage.setItem('allPayments', JSON.stringify(allPayments));
+            
+            // কার্ট খালি করবে
+            localStorage.removeItem('cart');
+            localStorage.removeItem('currentOrder');
+        }
+        
+        // পেজ লোড হওয়ার পর
+        document.addEventListener('DOMContentLoaded', loadPaymentMethod);
+    </script>
+</body>
+</html>
