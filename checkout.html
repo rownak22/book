@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>চেকআউট - বইঘর</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .checkout-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .checkout-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .checkout-title {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: bold;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .cart-summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .total-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-top: 1rem;
+        }
+        
+        .btn-payment {
+            display: block;
+            width: 100%;
+            background: #1abc9c;
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h1><i class="fas fa-book"></i> বইঘর</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> হোম</a>
+            <a href="cart.html"><i class="fas fa-shopping-cart"></i> কার্ট <span id="cart-count">0</span></a>
+        </div>
+    </nav>
+
+    <div class="checkout-container">
+        <h1 class="checkout-title"><i class="fas fa-shopping-bag"></i> আপনার অর্ডার সম্পন্ন করুন</h1>
+        
+        <div class="checkout-grid">
+            <!-- বামপাশ - গ্রাহক তথ্য -->
+            <div class="checkout-box">
+                <h2><i class="fas fa-user"></i> গ্রাহক তথ্য</h2>
+                
+                <form id="checkout-form">
+                    <div class="form-group">
+                        <label for="name">পূর্ণ নাম</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">মোবাইল নম্বর</label>
+                        <input type="tel" id="phone" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">ইমেইল</label>
+                        <input type="email" id="email" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">ঠিকানা</label>
+                        <textarea id="address" class="form-control" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="city">শহর</label>
+                        <input type="text" id="city" class="form-control" required>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- ডানপাশ - অর্ডার সামারি -->
+            <div class="checkout-box">
+                <h2><i class="fas fa-receipt"></i> অর্ডার সামারি</h2>
+                
+                <div id="order-summary">
+                    <!-- কার্ট আইটেম লোড হবে -->
+                </div>
+                
+                <div class="cart-summary-item">
+                    <span>সর্বমোট</span>
+                    <span id="total-amount">৳ 0</span>
+                </div>
+                
+                <div class="form-group">
+                    <label>পেমেন্ট মেথড</label>
+                    <select id="payment-method" class="form-control">
+                        <option value="bkash">বিকাশ</option>
+                        <option value="nogod">নগদ</option>
+                        <option value="rocket">রকেট</option>
+                    </select>
+                </div>
+                
+                <button class="btn-payment" onclick="proceedToPayment()">
+                    <i class="fas fa-lock"></i> পেমেন্ট করুন
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // অর্ডার সামারি লোড করবে
+        function loadOrderSummary() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const orderSummary = document.getElementById('order-summary');
+            let total = 0;
+            
+            orderSummary.innerHTML = '';
+            
+            if (cart.length === 0) {
+                orderSummary.innerHTML = '<p>আপনার কার্ট খালি</p>';
+                document.getElementById('total-amount').textContent = '৳ 0';
+                return;
+            }
+            
+            cart.forEach((item, index) => {
+                total += item.price;
+                
+                const itemHTML = `
+                    <div class="cart-summary-item">
+                        <span>${item.title}</span>
+                        <span>৳ ${item.price}</span>
+                    </div>
+                `;
+                orderSummary.innerHTML += itemHTML;
+            });
+            
+            document.getElementById('total-amount').textContent = `৳ ${total}`;
+        }
+        
+        // পেমেন্ট পেজে যাবে
+        function proceedToPayment() {
+            // ফর্ম ভ্যালিডেশন
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            const city = document.getElementById('city').value;
+            const paymentMethod = document.getElementById('payment-method').value;
+            
+            if (!name || !phone || !address || !city) {
+                alert('দয়া করে সব তথ্য পূরণ করুন');
+                return;
+            }
+            
+            // অর্ডার তথ্য LocalStorage এ সেভ করবে
+            const orderData = {
+                customer: { name, phone, address, city },
+                paymentMethod,
+                cart: JSON.parse(localStorage.getItem('cart')) || [],
+                orderId: 'ORD' + Date.now(),
+                date: new Date().toLocaleString()
+            };
+            
+            localStorage.setItem('currentOrder', JSON.stringify(orderData));
+            
+            // পেমেন্ট পেজে রিডাইরেক্ট
+            window.location.href = 'payment.html';
+        }
+        
+        // কার্ট কাউন্ট আপডেট
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartCount = document.getElementById('cart-count');
+            cartCount.textContent = cart.length;
+        }
+        
+        // পেজ লোড হওয়ার পর
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrderSummary();
+            updateCartCount();
+        });
+    </script>
+</body>
+</html>
