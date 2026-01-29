@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বইঘর - বইয়ের দোকান</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- নেভিগেশন বার -->
+    <nav class="navbar">
+        <div class="logo">
+            <h1><i class="fas fa-book"></i> বইঘর</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> হোম</a>
+            <a href="#categories"><i class="fas fa-list"></i> ক্যাটাগরি</a>
+            <a href="cart.html"><i class="fas fa-shopping-cart"></i> কার্ট <span id="cart-count">0</span></a>
+            <a href="admin/login.html" class="admin-btn"><i class="fas fa-user-cog"></i> অ্যাডমিন</a>
+        </div>
+    </nav>
+
+    <!-- হিরো সেকশন -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>জ্ঞানের আলো ছড়িয়ে দিন</h2>
+            <p>বাংলা ও ইংরেজি বইয়ের বিশাল কালেকশন</p>
+            <a href="#featured-books" class="btn">বই ব্রাউজ করুন</a>
+        </div>
+    </section>
+
+    <!-- বইয়ের লিস্ট -->
+    <section class="book-section" id="featured-books">
+        <h2><i class="fas fa-star"></i> জনপ্রিয় বইসমূহ</h2>
+        <div class="book-grid" id="book-container">
+            <!-- বইগুলো JavaScript দিয়ে লোড হবে -->
+        </div>
+    </section>
+
+    <!-- ফুটার -->
+    <footer>
+        <p>© 2024 বইঘর. সব права সংরক্ষিত</p>
+        <p>যোগাযোগ: ০১৭১২-৩৪৫৬৭৮ | ইমেইল: support@boighor.com</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html>
